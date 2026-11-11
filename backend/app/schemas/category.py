@@ -1,24 +1,33 @@
-"""Schema dữ liệu danh mục."""
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class CategoryBase(BaseModel):
+class CategoryCreate(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    sort_order: int = Field(default=0, ge=0)
-    is_active: bool = True
-
-
-class CategoryCreate(CategoryBase):
-    pass
+    sort_order: int = 0
 
 
 class CategoryUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
-    sort_order: int | None = Field(default=None, ge=0)
-    is_active: bool | None = None
+    sort_order: int | None = None
 
 
-class CategoryOut(CategoryBase):
+class CategoryStatusUpdate(BaseModel):
+    is_active: bool
+
+
+class CategorySortItem(BaseModel):
+    id: int
+    sort_order: int
+
+
+class CategoryReorder(BaseModel):
+    categories: list[CategorySortItem]
+
+
+class CategoryOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    name: str
+    sort_order: int
+    is_active: bool
